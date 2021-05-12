@@ -5,17 +5,16 @@ const puppeteer = require("puppeteer");
 const clientVolume = new Discord.Client();
 const clientZRXStaked = new Discord.Client();
 const clientEpochEnd = new Discord.Client();
-const clientEpochReward = new Discord.Client();
+const clientEpoch = new Discord.Client();
 clientVolume.login(token);
 clientZRXStaked.login(token1);
-clientEpochEnd.login(token2);
-clientEpochReward.login(token3);
+clientEpochEnd.login(token3);
+clientEpoch.login(token2);
 
-clientVolume.once('ready', () => {
+clientZRXStaked.once('ready', () => {
     console.log("Price name is up");
-    getStats();
     getVolume();
-
+    getStats()
 });
 
 const getStats = async () => {
@@ -28,24 +27,43 @@ const getStats = async () => {
         stats => stats.map(stat => stat.innerHTML.match(/<div class=".+?">(.+?)<\/div><div class=".+?">(.+?)<\/div>/))
     );
     await browser.close();
-    setTimeout(function () {
-        staking.forEach(element => {
-            console.log("numbers are: " + element[1]);
-            console.log("name is: " + element[2]);
-            if (element[1]) {
-                if (element[2].toLowerCase().includes("zrx")) {
-                    clientZRXStaked.user.setActivity(
-                        element[1], {type: 'PLAYING'});
-                } else if (element[2].toLowerCase().includes("epoch ends")) {
-                    clientEpochEnd.user.setActivity(
-                        element[1], {type: 'PLAYING'});
-                } else if (element[2].toLowerCase().includes("epoch rewards")) {
-                    clientEpochReward.user.setActivity(
-                        element[1], {type: 'PLAYING'});
-                }
+    let epochEnds;
+    let epochRewards;
+    let zrxStaked;
+    staking.forEach(element => {
+        console.log("numbers are: " + element[1]);
+        console.log("name is: " + element[2]);
+        if (element[1]) {
+            if (element[2].toLowerCase().includes("zrx")) {
+                zrxStaked = element[1];
+            } else if (element[2].toLowerCase().includes("epoch ends")) {
+                epochEnds = element[1];
+            } else if (element[2].toLowerCase().includes("epoch rewards")) {
+                epochRewards = element[1].replace("ETH", "Ξ");
             }
-        });
-    }, 1000);
+        }
+    });
+
+    clientZRXStaked.guilds.cache.forEach(function (value, key) {
+        try {
+            console.log("Updating zrx staked");
+            value.members.cache.get(clientZRXStaked.user.id).setNickname(zrxStaked);
+        } catch (e) {
+            console.log(e);
+        }
+    });
+
+    clientEpoch.guilds.cache.forEach(function (value, key) {
+        try {
+            console.log("Updating epoch");
+            value.members.cache.get(clientEpoch.user.id).setNickname(epochRewards + " | " + epochEnds);
+        } catch (e) {
+            console.log(e);
+        }
+    });
+
+    clientZRXStaked.user.setActivity("ZRX staked", {type: 'WATCHING'});
+    clientEpoch.user.setActivity("Epoch rewards | Epoch ends in", {type: 'WATCHING'});
 
 };
 
@@ -56,8 +74,16 @@ const getVolume = async () => {
     };
     console.log(volume);
     const volumeData = `$${volume.day}m | $${volume.all}b`;
-    clientVolume.user.setActivity(
-        volumeData, {type: 'PLAYING'});
+    clientVolume.guilds.cache.forEach(function (value, key) {
+        try {
+            console.log("Updating total volume");
+            value.members.cache.get(clientVolume.user.id).setNickname(volumeData);
+        } catch (e) {
+            console.log(e);
+        }
+    });
+    clientVolume.user.setActivity("0X VOLUME [24H | ALL-TIME]", {type: 'WATCHING'});
+
 };
 
 
