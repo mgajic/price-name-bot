@@ -1,10 +1,17 @@
 const Discord = require('discord.js');
-const config = require('./config.json');
+const {token, token1, token2, token3, prefix} = require('./config.json');
 const fetch = require("node-fetch");
 const puppeteer = require("puppeteer");
-const client = new Discord.Client();
+const clientVolume = new Discord.Client();
+const clientZRXStaked = new Discord.Client();
+const clientEpochEnd = new Discord.Client();
+const clientEpochReward = new Discord.Client();
+clientVolume.login(token);
+clientZRXStaked.login(token1);
+clientEpochEnd.login(token2);
+clientEpochReward.login(token3);
 
-client.once('ready', () => {
+clientVolume.once('ready', () => {
     console.log("Price name is up");
     getStats();
     getVolume();
@@ -20,12 +27,23 @@ const getStats = async () => {
         "#app > main:first-of-type > div:nth-of-type(2) > div:first-of-type > div",
         stats => stats.map(stat => stat.innerHTML.match(/<div class=".+?">(.+?)<\/div><div class=".+?">(.+?)<\/div>/))
     );
-    console.log(staking);
     await browser.close();
     setTimeout(function () {
         staking.forEach(element => {
             console.log("numbers are: " + element[1]);
             console.log("name is: " + element[2]);
+            if (element[1]) {
+                if (element[2].toLowerCase().includes("zrx")) {
+                    clientZRXStaked.user.setActivity(
+                        element[1], {type: 'PLAYING'});
+                } else if (element[2].toLowerCase().includes("epoch ends")) {
+                    clientEpochEnd.user.setActivity(
+                        element[1], {type: 'PLAYING'});
+                } else if (element[2].toLowerCase().includes("epoch rewards")) {
+                    clientEpochReward.user.setActivity(
+                        element[1], {type: 'PLAYING'});
+                }
+            }
         });
     }, 1000);
 
@@ -37,7 +55,16 @@ const getVolume = async () => {
         all: ((await (await fetch("https://api.0xtracker.com/stats/network?period=all")).json()).tradeVolume / 1000000000).toFixed(2)
     };
     console.log(volume);
+    const volumeData = `$${volume.day}m | $${volume.all}b`;
+    clientVolume.user.setActivity(
+        volumeData, {type: 'PLAYING'});
 };
 
 
-client.login(config["zrx-staked-token"]);
+setInterval(function () {
+    getStats();
+    getVolume();
+}, 360 * 1000);
+
+
+

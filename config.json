@@ -1,7 +1,7 @@
 {
   "prefix": "!",
-  "zrx-staked-token": "ODQyMDUwMzMwMjQ1MzMzMDIy.YJvqew.a-KSw1v0vAgffTd9h0xx1LIuDLg",
-  "zrx-epoch-reward-token": "ODQyMDg4MjY2OTAyOTI5NDg1.YJwN0A.mOJDyCRL-Hs65uAsFauRQc36ISM",
-  "zrx-epoch-end-token": "ODQyMDg4MTkzNTI4NjkyNzM4.YJwNvg.jWcniWIgZLXHl0JEEga75MDW6Mk",
-  "0x-volume-total-token": "ODQyMDg4MTAwNjcwOTk2NTAx.YJwNqA.joAwTCS0Hs5vFE-N1K_ikOrppa0"
+  "token1": "ODQyMDUwMzMwMjQ1MzMzMDIy.YJvqew.a-KSw1v0vAgffTd9h0xx1LIuDLg",
+  "token2": "ODQyMDg4MjY2OTAyOTI5NDg1.YJwN0A.mOJDyCRL-Hs65uAsFauRQc36ISM",
+  "token3": "ODQyMDg4MTkzNTI4NjkyNzM4.YJwNvg.jWcniWIgZLXHl0JEEga75MDW6Mk",
+  "token": "ODQyMDg4MTAwNjcwOTk2NTAx.YJwNqA.joAwTCS0Hs5vFE-N1K_ikOrppa0"
 }
