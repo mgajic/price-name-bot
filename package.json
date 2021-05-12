@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/mgajic/price-name-bot#readme",
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "discord.js": "^12.5.3",
+    "node-fetch": "^2.6.1",
+    "puppeteer": "^5.2.1"
   }
 }
