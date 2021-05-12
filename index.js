@@ -3,7 +3,6 @@ const fetch = require("node-fetch");
 const puppeteer = require("puppeteer");
 const clientVolume = new Discord.Client();
 const clientZRXStaked = new Discord.Client();
-const clientEpochEnd = new Discord.Client();
 const clientEpoch = new Discord.Client();
 clientVolume.login(process.env.BOT_TOKEN_VOLUME);
 clientZRXStaked.login(process.env.BOT_TOKEN_ZRX_STAKED);
