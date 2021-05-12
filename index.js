@@ -9,12 +9,6 @@ clientVolume.login(process.env.BOT_TOKEN_VOLUME);
 clientZRXStaked.login(process.env.BOT_TOKEN_ZRX_STAKED);
 clientEpoch.login(process.env.BOT_TOKEN_EPOCH);
 
-clientZRXStaked.once('ready', () => {
-    console.log("Price name is up");
-    getVolume();
-    getStats()
-});
-
 const getStats = async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -86,6 +80,7 @@ const getVolume = async () => {
 
 
 setInterval(function () {
+    console.log("geting stats and volumes")
     getStats();
     getVolume();
 }, 360 * 1000);
