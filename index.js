@@ -9,7 +9,12 @@ clientZRXStaked.login(process.env.BOT_TOKEN_ZRX_STAKED);
 clientEpoch.login(process.env.BOT_TOKEN_EPOCH);
 
 const getStats = async () => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+        ],
+    });
     const page = await browser.newPage();
     await page.goto("https://0x.org/zrx/staking");
     await new Promise(r => setTimeout(r, 2000));
