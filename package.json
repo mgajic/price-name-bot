@@ -1,0 +1,22 @@
+{
+  "name": "price-name-bot",
+  "version": "1.0.0",
+  "description": "Discord bot for displaying information as bot name",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mgajic/price-name-bot.git"
+  },
+  "author": "mgajic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mgajic/price-name-bot/issues"
+  },
+  "homepage": "https://github.com/mgajic/price-name-bot#readme",
+  "dependencies": {
+    "discord.js": "^12.5.3"
+  }
+}
