@@ -17,7 +17,7 @@ const getStats = async () => {
     });
     const page = await browser.newPage();
     await page.goto("https://0x.org/zrx/staking");
-    await new Promise(r => setTimeout(r, 2000));
+    await new Promise(r => setTimeout(r, 2500));
     const staking = await page.$$eval(
         "#app > main:first-of-type > div:nth-of-type(2) > div:first-of-type > div",
         stats => stats.map(stat => stat.innerHTML.match(/<div class=".+?">(.+?)<\/div><div class=".+?">(.+?)<\/div>/))
@@ -29,7 +29,7 @@ const getStats = async () => {
     staking.forEach(element => {
         console.log("numbers are: " + element[1]);
         console.log("name is: " + element[2]);
-        if (element[1]) {
+        if (element[1] && element[2]) {
             if (element[2].toLowerCase().includes("zrx")) {
                 zrxStaked = element[1];
             } else if (element[2].toLowerCase().includes("epoch ends")) {
@@ -40,23 +40,26 @@ const getStats = async () => {
         }
     });
 
-    clientZRXStaked.guilds.cache.forEach(function (value, key) {
-        try {
-            console.log("Updating zrx staked");
-            value.members.cache.get(clientZRXStaked.user.id).setNickname(zrxStaked);
-        } catch (e) {
-            console.log(e);
-        }
-    });
-
-    clientEpoch.guilds.cache.forEach(function (value, key) {
-        try {
-            console.log("Updating epoch");
-            value.members.cache.get(clientEpoch.user.id).setNickname(epochRewards + " | " + epochEnds);
-        } catch (e) {
-            console.log(e);
-        }
-    });
+    if (zrxStaked) {
+        clientZRXStaked.guilds.cache.forEach(function (value, key) {
+            try {
+                console.log("Updating zrx staked");
+                value.members.cache.get(clientZRXStaked.user.id).setNickname(zrxStaked);
+            } catch (e) {
+                console.log(e);
+            }
+        });
+    }
+    if (clientEpoch) {
+        clientEpoch.guilds.cache.forEach(function (value, key) {
+            try {
+                console.log("Updating epoch");
+                value.members.cache.get(clientEpoch.user.id).setNickname(epochRewards + " | " + epochEnds);
+            } catch (e) {
+                console.log(e);
+            }
+        });
+    }
 
     clientZRXStaked.user.setActivity("ZRX staked", {type: 'WATCHING'});
     clientEpoch.user.setActivity("Epoch rewards | Epoch ends in", {type: 'WATCHING'});
@@ -78,7 +81,7 @@ const getVolume = async () => {
             console.log(e);
         }
     });
-    clientVolume.user.setActivity("0X VOLUME [24H | ALL-TIME]", {type: 'WATCHING'});
+    clientVolume.user.setActivity("Volume 24H | All time", {type: 'WATCHING'});
 
 };
 
