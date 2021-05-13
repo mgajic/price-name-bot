@@ -31,7 +31,7 @@ const getStats = async () => {
         console.log("name is: " + element[2]);
         if (element[1] && element[2]) {
             if (element[2].toLowerCase().includes("zrx")) {
-                zrxStaked = element[1];
+                zrxStaked = element[1] + " ZRX";
             } else if (element[2].toLowerCase().includes("epoch ends")) {
                 epochEnds = element[1];
             } else if (element[2].toLowerCase().includes("epoch rewards")) {
@@ -62,7 +62,7 @@ const getStats = async () => {
     }
 
     clientZRXStaked.user.setActivity("ZRX staked", {type: 'WATCHING'});
-    clientEpoch.user.setActivity("Epoch rewards | Epoch ends in", {type: 'WATCHING'});
+    clientEpoch.user.setActivity("Epoch: ETH rewards ┊ ends in", {type: 'WATCHING'});
 
 };
 
@@ -76,12 +76,12 @@ const getVolume = async () => {
     clientVolume.guilds.cache.forEach(function (value, key) {
         try {
             console.log("Updating total volume");
-            value.members.cache.get(clientVolume.user.id).setNickname(volumeData);
+            value.members.cache.get(clientVolume.user.id).setNickname(volumeData.toUpperCase());
         } catch (e) {
             console.log(e);
         }
     });
-    clientVolume.user.setActivity("Volume 24H | All time", {type: 'WATCHING'});
+    clientVolume.user.setActivity("0x volume [25H | All-time]", {type: 'WATCHING'});
 
 };
 
