@@ -3,10 +3,12 @@ const fetch = require("node-fetch");
 const puppeteer = require("puppeteer");
 const clientVolume = new Discord.Client();
 const clientZRXStaked = new Discord.Client();
-const clientEpoch = new Discord.Client();
+const clientEpochReward = new Discord.Client();
+const clientEpochEnd = new Discord.Client();
 clientVolume.login(process.env.BOT_TOKEN_VOLUME);
 clientZRXStaked.login(process.env.BOT_TOKEN_ZRX_STAKED);
-clientEpoch.login(process.env.BOT_TOKEN_EPOCH);
+clientEpochReward.login(process.env.BOT_TOKEN_EPOCH);
+clientEpochEnd.login(process.env.BOT_TOKEN_EPOCH_END);
 
 const getStats = async () => {
     const browser = await puppeteer.launch({
@@ -33,9 +35,9 @@ const getStats = async () => {
             if (element[2].toLowerCase().includes("zrx")) {
                 zrxStaked = element[1] + " ZRX";
             } else if (element[2].toLowerCase().includes("epoch ends")) {
-                epochEnds = element[1];
+                epochEnds = "Ends in " + element[1];
             } else if (element[2].toLowerCase().includes("epoch rewards")) {
-                epochRewards = element[1].replace("ETH", "Ξ");
+                epochRewards = element[1];
             }
         }
     });
@@ -50,19 +52,31 @@ const getStats = async () => {
             }
         });
     }
-    if (clientEpoch) {
-        clientEpoch.guilds.cache.forEach(function (value, key) {
+    if (clientEpochReward) {
+        clientEpochReward.guilds.cache.forEach(function (value, key) {
             try {
-                console.log("Updating epoch");
-                value.members.cache.get(clientEpoch.user.id).setNickname(epochRewards + " | " + epochEnds);
+                console.log("Updating epoch reward");
+                value.members.cache.get(clientEpochReward.user.id).setNickname(epochRewards);
             } catch (e) {
                 console.log(e);
             }
         });
     }
 
-    clientZRXStaked.user.setActivity("ZRX staked", {type: 'WATCHING'});
-    clientEpoch.user.setActivity("Epoch: ETH rewards ┊ ends in", {type: 'WATCHING'});
+    if (clientEpochEnd) {
+        clientEpochEnd.guilds.cache.forEach(function (value, key) {
+            try {
+                console.log("Updating epoch end");
+                value.members.cache.get(clientEpochEnd.user.id).setNickname(epochEnds);
+            } catch (e) {
+                console.log(e);
+            }
+        });
+    }
+
+    clientZRXStaked.user.setActivity("Total ZRX staked", {type: 'WATCHING'});
+    clientEpochReward.user.setActivity("Current epoch rewards", {type: 'WATCHING'});
+    clientEpochEnd.user.setActivity("Current epoch end", {type: 'WATCHING'});
 
 };
 
@@ -81,7 +95,7 @@ const getVolume = async () => {
             console.log(e);
         }
     });
-    clientVolume.user.setActivity("0x volume [25H | All-time]", {type: 'WATCHING'});
+    clientVolume.user.setActivity("0x volume: 24H | All-time", {type: 'WATCHING'});
 
 };
 
