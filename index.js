@@ -1,3 +1,4 @@
+require("dotenv").config()
 const Discord = require('discord.js');
 const fetch = require("node-fetch");
 const puppeteer = require("puppeteer");
@@ -98,6 +99,12 @@ const getVolume = async () => {
     clientVolume.user.setActivity("0x volume: 24H | All-time", {type: 'WATCHING'});
 
 };
+
+setTimeout(function () {
+    console.log("geting stats and volumes")
+    getStats();
+    getVolume();
+}, 30 * 1000);
 
 
 setInterval(function () {
