@@ -21,26 +21,17 @@ const getStats = async () => {
     await page.goto("https://0x.org/zrx/staking");
     await new Promise(r => setTimeout(r, 2500));
     const staking = await page.$$eval(
-        "#app > main:first-of-type > div:nth-of-type(2) > div:first-of-type > div",
-        stats => stats.map(stat => stat.innerHTML.match(/<div class=".+?">(.+?)<\/div><div class=".+?">(.+?)<\/div>/))
+        "#app > main:first-of-type > div:first-of-type > div:first-of-type > div:first-of-type > div:nth-of-type(2) > div:first-of-type > ol > li > span",
+        stats => stats.map(stat => stat.innerHTML)
+    );
+    const epoch = await page.$$eval(
+        "#app > main:first-of-type > div:first-of-type > div:first-of-type > div:first-of-type > div:nth-of-type(2) > div:first-of-type > ol > span:first-of-type",
+        stats => stats.map(stat => stat.innerHTML)
     );
     await browser.close();
-    let epochEnds;
-    let epochRewards;
-    let zrxStaked;
-    staking.forEach(element => {
-        console.log("numbers are: " + element[1]);
-        console.log("name is: " + element[2]);
-        if (element[1] && element[2]) {
-            if (element[2].toLowerCase().includes("zrx")) {
-                zrxStaked = element[1] + " ZRX";
-            } else if (element[2].toLowerCase().includes("epoch ends")) {
-                epochEnds = "Ends in " + element[1];
-            } else if (element[2].toLowerCase().includes("epoch rewards")) {
-                epochRewards = element[1];
-            }
-        }
-    });
+    let epochRewards = staking[0];
+    let zrxStaked = staking[1] + " ZRX";
+    let epochEnds = epoch[0].replace('Next rewards in ', 'Ends in ');
 
     if (zrxStaked) {
         clientZRXStaked.guilds.cache.forEach(function (value, key) {
